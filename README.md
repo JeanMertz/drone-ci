@@ -45,6 +45,18 @@ $ fleetctl load /etc/systemd/system/drone.service
 $ fleetctl start drone.service
 ```
 
+You can optionally load the "Orphaned Docker Volumes Cleaner" service. This
+timer-based service removes any orphaned docker volumes every night at 02:00.
+
+You need to use this if you ever expect to use a docker in docker solution like
+[jpetazzo/dind](https://github.com/jpetazzo/dind) to run your own Docker
+containers inside a Drone job:
+
+```bash
+$ fleetctl load /etc/systemd/system/orphaned-docker-volumes-cleaner.*
+$ fleetctl start /etc/systemd/system/orphaned-docker-volumes-cleaner.timer
+```
+
 ## License
 
 MIT - see the accompanying [LICENSE](LICENSE) file for details.

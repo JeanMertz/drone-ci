@@ -13,6 +13,26 @@ coreos:
     command: start
   - name: fleet.service
     command: start
+  - name: orphaned-docker-volumes-cleaner.timer
+    content: |
+      [Unit]
+      Description=Orphaned Docker Volumes Cleaner Timer
+
+      [Timer]
+      OnCalendar=02:00
+      Persistent=true
+  - name: orphaned-docker-volumes-cleaner.service
+    content: |
+      [unit]
+      Description=Orphaned Docker Volumes Cleaner
+      After=docker.service
+      Requires=docker.service
+
+      [Service]
+      ExecStart=/usr/bin/docker run                        \
+        --volume /var/run/docker.sock:/var/run/docker.sock \
+        --volume /var/lib/docker:/var/lib/docker           \
+        --rm martin/docker-cleanup-volumes
   - name: database-data.service
     enable: true
     content: |
